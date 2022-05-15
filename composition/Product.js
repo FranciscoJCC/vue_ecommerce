@@ -29,27 +29,21 @@ app.component("product",{
                 <span>Código de descuento</span>
                 <input type="text" placeholder="Ingresa tu código" v-model="disccount" @keyup.enter="applyDiscount">
             </div>
-            <button :disabled="product.stock === 0" @click="addToCart" >Agregar al carrito</button>
+            <button :disabled="product.stock === 0" @click="sendToCart()">Agregar al carrito</button>
         </section>
     `,
 
     props: ["product"],
 
-    setup(props){
+    emits: ["sendtocart"],
+
+    setup(props, context){
 
         const productState = reactive({
             activeImage: 0
         });
 
-        function addToCart(){
-            const prodIndex = cart.findIndex(prod => prod.name === props.product.name);
-
-            (prodIndex >= 0)
-               ? cart[prodIndex].quantity += 1
-               : cart.push(product);
-
-            props.product.stock -= 1;
-        }
+        
 
         const disccount = ref('');
         const disccountCodes = ref(["platzi20", "descuento50"]);
@@ -58,11 +52,15 @@ app.component("product",{
             let disccountCodeIndex = disccountCodes.value.indexOf(
               disccount.value
             );
-            console.log(disccountCodeIndex);
+
             if (disccountCodeIndex >= 0) {
               props.product.price *= 50 / 100;
               disccountCodes.value.splice(disccountCodeIndex, 1);
             }
+        }
+
+        function sendToCart(){
+            context.emit("sendtocart", props.product)
         }
 
         function priceNumber(value){
@@ -71,10 +69,10 @@ app.component("product",{
 
         return {
             ...toRefs(productState),
-            addToCart,
             priceNumber,
             applyDiscount,
             disccount,
+            sendToCart,
         }
     }
 });

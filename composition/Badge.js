@@ -11,6 +11,6 @@ app.component("badge",{
     },
 
     mounted(){
-        console.log(this.product);
+        
     },
 });

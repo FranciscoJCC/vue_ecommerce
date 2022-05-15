@@ -13,7 +13,9 @@
     <div id="app">
       <header>
         <h3>Ecommerce</h3>
-        <button class="cart" @click="cartOpen = !cartOpen">Carro ({{cart.length}})</button>
+        <button class="cart" @click="cartOpen = !cartOpen">
+          Carro ({{cart.length}})
+        </button>
         <div class="cart-content" v-show="cartOpen">
           <div
             class="cart-content__product"
@@ -22,12 +24,20 @@
             :class="{'bg-gray': index & 1}"
           >
             <img :src="product.images[0].image" :alt="product.name" />
-            <span>{{product.name}} - ${{ priceNumber(product.price * product.quantity) }} ( {{product.quantity}} )</span>
+            <span
+              >{{product.name}} - ${{ priceNumber(product.price *
+              product.quantity) }} ( {{product.quantity}} )</span
+            >
           </div>
         </div>
       </header>
       <main>
-        <product v-for="product in products" :key="product.name" :product="product"></product>
+        <product
+          v-for="product in products"
+          :key="product.name"
+          :product="product"
+          @sendtocart="addToCart($event)"
+        ></product>
       </main>
     </div>
 
@@ -37,7 +47,6 @@
 
       const app = createApp({
         setup() {
-
           const products = ref([
             {
               name: "Camara",
@@ -102,28 +111,41 @@
           ]);
 
           const cartState = reactive({
-            cartOpen : false,
+            cartOpen: false,
             cart: [],
           });
 
           const { cart } = cartState;
 
-          function priceNumber(value){
+          function addToCart(product) {
+            const prodIndex = cart.findIndex(
+              (prod) => prod.name === product.name
+            );
+
+            prodIndex >= 0
+              ? (cart[prodIndex].quantity += 1)
+              : cart.push(product);
+
+            product.stock -= 1;
+          }
+
+          function priceNumber(value) {
             return new Intl.NumberFormat("es-MX").format(value);
           }
 
           return {
             ...toRefs(cartState),
             products,
+            addToCart,
             priceNumber,
           };
         },
       });
-
-      
     </script>
     <script src="./Product.js"></script>
     <script src="./Badge.js"></script>
-    <script>app.mount("#app");</script>
+    <script>
+      app.mount("#app");
+    </script>
   </body>
 </html>

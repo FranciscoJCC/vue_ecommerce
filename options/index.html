@@ -30,8 +30,12 @@
         </div>
       </header>
       <main>
-        
-        <product v-for="product in products" :key="product.name" :product="product"></product>
+        <product
+          v-for="product in products"
+          :key="product.name"
+          :product="product"
+          @sendtocart="addToCart($event)"
+        ></product>
       </main>
     </div>
 
@@ -45,10 +49,9 @@
             products: [
               {
                 name: "Camara",
-                price: 450_000.5,
+                price: 450_000,
                 stock: 5,
-                content:
-                  " Lorem ipsum dolor sit, amet consectetur adipisicing elit. Repellat deleniti minima repellendus quidem possimus voluptate. Nam, possimus rem? Rerum accusantium non quod ex nam labore magnam vero adipisci sum sequi",
+                content: `Lorem ipsum dolor sit, amet consectetur adipisicing elit. Illo, facere quis animi, amet sequi iste ipsam rerum, necessitatibus tempora obcaecati consequatur maxime sint eos laboriosam veniam maiores voluptatem eum! Eveniet!`,
                 images: [
                   {
                     image: "./images/camara.jpg",
@@ -64,11 +67,10 @@
                 quantity: 1,
               },
               {
-                name: "Camara PTZ",
-                price: 250_000.5,
-                stock: 3,
-                content:
-                  " Lorem ipsum dolor sit, amet consectetur adipisicing elit. Repellat deleniti minima repellendus quidem possimus voluptate. Nam, possimus rem? Rerum accusantium non quod ex nam labore magnam vero adipisci sum sequi",
+                name: "Camara PL",
+                price: 250_000,
+                stock: 5,
+                content: `Lorem ipsum dolor sit, amet consectetur adipisicing elit. Illo, facere quis animi, amet sequi iste ipsam rerum, necessitatibus tempora obcaecati consequatur maxime sint eos laboriosam veniam maiores voluptatem eum! Eveniet!`,
                 images: [
                   {
                     image: "./images/camara.jpg",
@@ -84,11 +86,29 @@
                 quantity: 1,
               },
               {
-                name: "Camara BGM",
-                price: 350_000.5,
-                stock: 5,
-                content:
-                  " Lorem ipsum dolor sit, amet consectetur adipisicing elit. Repellat deleniti minima repellendus quidem possimus voluptate. Nam, possimus rem? Rerum accusantium non quod ex nam labore magnam vero adipisci sum sequi",
+                name: "Camara PL2",
+                price: 550_000,
+                stock: 3,
+                content: `Lorem ipsum dolor sit, amet consectetur adipisicing elit. Illo, facere quis animi, amet sequi iste ipsam rerum, necessitatibus tempora obcaecati consequatur maxime sint eos laboriosam veniam maiores voluptatem eum! Eveniet!`,
+                images: [
+                  {
+                    image: "./images/camara.jpg",
+                    thumbnail: "./images/camara-thumb.jpg",
+                  },
+                  {
+                    image: "./images/camara-2.jpg",
+                    thumbnail: "./images/camara-2-thumb.jpg",
+                  },
+                ],
+                new: true,
+                offer: true,
+                quantity: 1,
+              },
+              {
+                name: "Camara PL3",
+                price: 650_000,
+                stock: 3,
+                content: `Lorem ipsum dolor sit, amet consectetur adipisicing elit. Illo, facere quis animi, amet sequi iste ipsam rerum, necessitatibus tempora obcaecati consequatur maxime sint eos laboriosam veniam maiores voluptatem eum! Eveniet!`,
                 images: [
                   {
                     image: "./images/camara.jpg",
@@ -112,12 +132,31 @@
 
         computed: {},
 
-        methods: {},
+        methods: {
+          addToCart(product) {
+            console.log("evento inciado");
+            const prodIndex = this.cart.findIndex(
+              (prod) => prod.name === product.name
+            );
+
+            if (prodIndex >= 0) {
+              this.cart[prodIndex].quantity += 1;
+            } else {
+              this.cart.push(product);
+            }
+            product.stock -= 1;
+          },
+
+          priceNumber(value) {
+            return new Intl.NumberFormat("es-MX").format(value);
+          },
+        },
       });
     </script>
 
-    <script src="./Product.js"></script>
     <script src="./Badge.js"></script>
+    <script src="./Product.js"></script>
+
     <script>
       app.mount("#app");
     </script>

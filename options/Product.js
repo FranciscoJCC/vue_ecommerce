@@ -1,5 +1,6 @@
 app.component("product",{
     template:/*vue-html*/`
+    
         <section class="product">
             <div class="product__thumbnails">
                 <div
@@ -29,8 +30,9 @@ app.component("product",{
                 <span>Código de descuento</span>
                 <input type="text" placeholder="Ingresa tu código" v-model="disccount" @keyup.enter="applyDiscount">
             </div>
-            <button :disabled="product.stock === 0" @click="addToCart" >Agregar al carrito</button>
+            <button :disabled="product.stock === 0" @click="sendToCart()" >Agregar al carrito</button>
         </section>
+    
     `,
 
     props: {
@@ -39,6 +41,8 @@ app.component("product",{
             default: () => {},
         }
     },
+
+    emits:["sendtocart"],
 
     data(){
         return {
@@ -62,15 +66,8 @@ app.component("product",{
             }
         },
 
-        addToCart(){
-            const prodIndex = this.cart.findIndex(prod => prod.name === this.product.name);
-
-            if(prodIndex >= 0){
-                this.cart[prodIndex].quantity += 1;
-            }else{
-                this.cart.push(this.product);
-            }
-            this.product.stock -= 1;
+        sendToCart(){
+            this.$emit("sendtocart", this.product);            
         }
     },
 });
