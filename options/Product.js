@@ -22,7 +22,7 @@ app.component("product",{
             <h4>{{product.name.toUpperCase()}} {{product.stock === 0 ? "😢" : "😊"}}</h4>
             <badge :product="product"></badge>
             <p class="description__status" v-if="product.stock <= 3"> Quedan pocas unidades</p>
-            <p class="description__price"> {{ priceNumber(product.price) }}</p>
+            <p class="description__price" :style="{ color: price_color }"> {{ priceNumber(product.price) }}</p>
             <p class="description__content">
                 {{product.content}}
             </p>
@@ -49,6 +49,7 @@ app.component("product",{
             activeImage: 0,
             disccountCodes: ["platzi20","descuento50"],
             disccount : 0,
+            price_color : "rgb(104, 104, 209)"
         }
     },
 
@@ -70,4 +71,12 @@ app.component("product",{
             this.$emit("sendtocart", this.product);            
         }
     },
+
+    watch:{
+       
+        "product.stock"(stock) {
+            if(stock <= 1)
+                this.price_color = "rgb(188, 30, 67)";
+        }
+    }
 });

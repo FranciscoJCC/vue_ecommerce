@@ -21,7 +21,7 @@ app.component("product",{
             <h4>{{product.name.toUpperCase()}} {{product.stock === 0 ? "😢" : "😊"}}</h4>
             <badge :product="product"></badge>
             <p class="description__status" v-if="product.stock <= 3"> Quedan pocas unidades</p>
-            <p class="description__price"> {{ priceNumber(product.price) }}</p>
+            <p class="description__price" :style="{ color: price_color }"> {{ priceNumber(product.price) }}</p>
             <p class="description__content">
                 {{product.content}}
             </p>
@@ -40,7 +40,8 @@ app.component("product",{
     setup(props, context){
 
         const productState = reactive({
-            activeImage: 0
+            activeImage: 0,
+            price_color: "rgb(104, 104, 209)",
         });
 
         
@@ -66,6 +67,12 @@ app.component("product",{
         function priceNumber(value){
             return new Intl.NumberFormat("es-MX").format(value);
         }
+
+        //Cuando el watcher es una propiedad plana (numero o texto) se debe pasar una funcion anonima que retorna el tipo plano
+        watch(() => props.product.stock, (stock) => { 
+            if(stock <= 1)
+                productState.price_color = "rgb(188 30 67)";
+        });
 
         return {
             ...toRefs(productState),

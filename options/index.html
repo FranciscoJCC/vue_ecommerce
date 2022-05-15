@@ -27,6 +27,7 @@
               product.quantity) }} ({{product.quantity}})
             </span>
           </div>
+          <p>Total. {{ priceNumber(total)}}</p>
         </div>
       </header>
       <main>
@@ -127,6 +128,7 @@
 
             cartOpen: true,
             cart: [],
+            total: 0,
           };
         },
 
@@ -151,6 +153,23 @@
             return new Intl.NumberFormat("es-MX").format(value);
           },
         },
+
+        watch:{
+          //watcher de un objeto
+          cart: {
+            handler(cart){
+              this.total = cart.reduce((prev, curr) => {
+                const prevPrice = prev.price || prev;
+                const prevQuantity = prev.quantity || 1;
+                return prevPrice * prevQuantity + curr.price * curr.quantity;
+              }, 0);
+            },
+            deep: true,
+            /* 
+            El ‘deep’ es para decirle a Vue que observe reactivamente a las propiedades más profundas del objeto
+            */
+          }
+        }
       });
     </script>
 
