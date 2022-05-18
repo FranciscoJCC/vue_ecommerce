@@ -132,3 +132,10 @@ body {
   .badge.offer {
     background-color: rgb(197, 107, 33);
   }
+
+  .searchProductBar input{
+    font-size: 1.2rem;
+    margin-top: 10px;
+    margin-left: 20px;
+    width: 50%;
+  }

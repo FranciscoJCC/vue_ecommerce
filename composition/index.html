@@ -44,77 +44,24 @@
 
     <script src="https://unpkg.com/vue@next"></script>
     <script>
-      const { createApp, ref, reactive, toRefs, watch } = Vue;
+      const { createApp, ref, reactive, toRefs, watch, computed, onMounted } = Vue;
 
       const app = createApp({
         setup() {
-          const products = ref([
-            {
-              name: "Camara",
-              price: 450_000.5,
-              stock: 5,
-              content:
-                " Lorem ipsum dolor sit, amet consectetur adipisicing elit. Repellat deleniti minima repellendus quidem possimus voluptate. Nam, possimus rem? Rerum accusantium non quod ex nam labore magnam vero adipisci sum sequi",
-              images: [
-                {
-                  image: "./images/camara.jpg",
-                  thumbnail: "./images/camara-thumb.jpg",
-                },
-                {
-                  image: "./images/camara-2.jpg",
-                  thumbnail: "./images/camara-2-thumb.jpg",
-                },
-              ],
-              new: true,
-              offer: false,
-              quantity: 1,
-            },
-            {
-              name: "Camara PTZ",
-              price: 250_000.5,
-              stock: 3,
-              content:
-                " Lorem ipsum dolor sit, amet consectetur adipisicing elit. Repellat deleniti minima repellendus quidem possimus voluptate. Nam, possimus rem? Rerum accusantium non quod ex nam labore magnam vero adipisci sum sequi",
-              images: [
-                {
-                  image: "./images/camara.jpg",
-                  thumbnail: "./images/camara-thumb.jpg",
-                },
-                {
-                  image: "./images/camara-2.jpg",
-                  thumbnail: "./images/camara-2-thumb.jpg",
-                },
-              ],
-              new: true,
-              offer: true,
-              quantity: 1,
-            },
-            {
-              name: "Camara BGM",
-              price: 350_000.5,
-              stock: 5,
-              content:
-                " Lorem ipsum dolor sit, amet consectetur adipisicing elit. Repellat deleniti minima repellendus quidem possimus voluptate. Nam, possimus rem? Rerum accusantium non quod ex nam labore magnam vero adipisci sum sequi",
-              images: [
-                {
-                  image: "./images/camara.jpg",
-                  thumbnail: "./images/camara-thumb.jpg",
-                },
-                {
-                  image: "./images/camara-2.jpg",
-                  thumbnail: "./images/camara-2-thumb.jpg",
-                },
-              ],
-              new: false,
-              offer: true,
-              quantity: 1,
-            },
-          ]);
+          const products = ref([]);
 
           const cartState = reactive({
             cartOpen: false,
             cart: [],
-            total: 0,
+            /* total: 0, */
+          });
+
+          const total = computed(() => {
+            return cartState.cart.reduce((prev, curr) => {
+              const prevPrice = prev.price || prev;
+              const prevQuantity = prev.quantity || 1;
+              return prevPrice * prevQuantity + curr.price * curr.quantity;
+            }, 0);
           });
 
           const { cart } = cartState;
@@ -131,12 +78,22 @@
             product.stock -= 1;
           }
 
-          watch(cartState.cart, (value) => {
+          /* watch(cartState.cart, (value) => {
             cartState.total = cartState.cart.reduce((prev, curr) => {
                 const prevPrice = prev.price || prev;
                 const prevQuantity = prev.quantity || 1;
                 return prevPrice * prevQuantity + curr.price * curr.quantity;
               }, 0);
+          }); */
+
+          onMounted(() => {
+            console.log("mounted");
+          }),
+
+          fetch("https://my-json-server.typicode.com/iosamuel/demo/products")
+          .then(res => res.json())
+          .then(data => {
+            products.value = data;
           });
 
           function priceNumber(value) {
@@ -146,6 +103,7 @@
           return {
             ...toRefs(cartState),
             products,
+            total,
             addToCart,
             priceNumber,
           };

@@ -49,7 +49,16 @@ app.component("product",{
             activeImage: 0,
             disccountCodes: ["platzi20","descuento50"],
             disccount : 0,
-            price_color : "rgb(104, 104, 209)"
+            /* price_color : "rgb(104, 104, 209)" */
+        }
+    },
+
+    computed: {
+        price_color(){
+            if(this.product.stock >= 1)
+                return "rgb(104, 104, 209)";
+
+            return "rgb(188, 30, 67)";
         }
     },
 
@@ -72,11 +81,12 @@ app.component("product",{
         }
     },
 
+
     watch:{
        
-        "product.stock"(stock) {
+        /* "product.stock"(stock) {
             if(stock <= 1)
                 this.price_color = "rgb(188, 30, 67)";
-        }
+        } */
     }
 });

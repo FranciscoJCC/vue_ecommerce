@@ -41,10 +41,18 @@ app.component("product",{
 
         const productState = reactive({
             activeImage: 0,
-            price_color: "rgb(104, 104, 209)",
+            price_color: computed(() =>
+                props.product.stock <= 1 ? "rgb(188 30 67)" : "rgb(104, 104, 209)"
+            )
+            /* price_color: "rgb(104, 104, 209)", */
         });
 
-        
+        /* const price_color = computed(() => {
+            if(props.product.stock >= 1)
+                return "rgb(104, 104, 209)";
+
+            return "rgb(188 30 67)";
+        }); */
 
         const disccount = ref('');
         const disccountCodes = ref(["platzi20", "descuento50"]);
@@ -69,10 +77,10 @@ app.component("product",{
         }
 
         //Cuando el watcher es una propiedad plana (numero o texto) se debe pasar una funcion anonima que retorna el tipo plano
-        watch(() => props.product.stock, (stock) => { 
+       /*  watch(() => props.product.stock, (stock) => { 
             if(stock <= 1)
                 productState.price_color = "rgb(188 30 67)";
-        });
+        }); */
 
         return {
             ...toRefs(productState),
